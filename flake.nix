@@ -22,6 +22,7 @@
             nodejs_22
             chromium
             git
+            gh
           ];
 
           shellHook = ''

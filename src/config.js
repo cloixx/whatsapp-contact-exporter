@@ -11,20 +11,47 @@ export const AUTH_DIR = path.resolve(PROJECT_ROOT, '.wwebjs_auth');
 export const FIXTURES_DIR = path.resolve(PROJECT_ROOT, 'tests', 'fixtures');
 
 /**
- * Detect available Chromium / Google Chrome binary on Linux / NixOS.
+ * Detect available Chromium / Google Chrome binary across Linux, macOS, and Windows.
  */
 export function getChromiumExecutablePath() {
   if (process.env.PUPPETEER_EXECUTABLE_PATH && fs.existsSync(process.env.PUPPETEER_EXECUTABLE_PATH)) {
     return process.env.PUPPETEER_EXECUTABLE_PATH;
   }
 
-  const candidates = [
-    '/run/current-system/sw/bin/chromium',
-    '/run/current-system/sw/bin/google-chrome',
-    '/usr/bin/chromium',
-    '/usr/bin/google-chrome-stable',
-    '/usr/bin/google-chrome',
-  ];
+  const platform = process.platform;
+  const candidates = [];
+
+  if (platform === 'win32') {
+    const programFiles = process.env['ProgramFiles'] || 'C:\\Program Files';
+    const programFilesX86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
+    const localAppData = process.env['LocalAppData'] || '';
+
+    candidates.push(
+      path.join(programFiles, 'Google\\Chrome\\Application\\chrome.exe'),
+      path.join(programFilesX86, 'Google\\Chrome\\Application\\chrome.exe'),
+      path.join(localAppData, 'Google\\Chrome\\Application\\chrome.exe'),
+      path.join(programFiles, 'Microsoft\\Edge\\Application\\msedge.exe'),
+      path.join(programFilesX86, 'Microsoft\\Edge\\Application\\msedge.exe')
+    );
+  } else if (platform === 'darwin') {
+    candidates.push(
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      '/Applications/Chromium.app/Contents/MacOS/Chromium',
+      '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+      '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'
+    );
+  } else {
+    // Linux / NixOS / BSD
+    candidates.push(
+      '/run/current-system/sw/bin/chromium',
+      '/run/current-system/sw/bin/google-chrome',
+      '/usr/bin/google-chrome-stable',
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium',
+      '/usr/bin/chromium-browser',
+      '/snap/bin/chromium'
+    );
+  }
 
   for (const candidate of candidates) {
     if (fs.existsSync(candidate)) {
