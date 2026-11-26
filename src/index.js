@@ -14,6 +14,7 @@ function printHelp() {
 
 USAGE:
   ./run.sh                  Connects to WhatsApp via QR code and exports contacts
+  ./run.sh --headed         Runs with visible browser window (useful for debugging)
   ./run.sh --synthetic      Runs full export pipeline with synthetic test data
   ./run.sh --help           Displays this help message
   ./run.sh --clean          Removes existing session data (.wwebjs_auth)
@@ -93,9 +94,10 @@ async function handleSynthetic() {
   console.log(`Output files are in: ${OUTPUT_DIR}\n`);
 }
 
-async function handleRealExport() {
+async function handleRealExport(options = {}) {
+  const { headless = true } = options;
   console.log('================================================================');
-  console.log(' WhatsApp Contact Exporter - Live Export');
+  console.log(` WhatsApp Contact Exporter - Live Export (${headless ? 'Headless' : 'Visible Browser'} Mode)`);
   console.log('================================================================\n');
 
   ensureSecureDir(OUTPUT_DIR);
@@ -103,7 +105,7 @@ async function handleRealExport() {
 
   try {
     const { rawContacts, rawChats, storeContacts, lidToPhoneMap } = await runWhatsAppClient({
-      headless: true,
+      headless,
       onProgress: (msg) => console.log(msg),
     });
 
@@ -153,7 +155,8 @@ async function main() {
     return;
   }
 
-  await handleRealExport();
+  const isHeaded = args.includes('--headed') || args.includes('--gui');
+  await handleRealExport({ headless: !isHeaded });
 }
 
 main().catch((err) => {

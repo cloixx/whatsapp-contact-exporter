@@ -31,6 +31,10 @@ export async function runWhatsAppClient(options = {}) {
     authStrategy: new LocalAuth({
       dataPath: AUTH_DIR,
     }),
+    authTimeoutMs: 120000, // 2 minutes to allow initial bundle load
+    qrMaxRetries: 0,       // Keep waiting for QR scan without aborting
+    userAgent:
+      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
     puppeteer: {
       executablePath: chromiumPath,
       headless: headless,
@@ -39,6 +43,7 @@ export async function runWhatsAppClient(options = {}) {
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
         '--disable-gpu',
+        '--disable-blink-features=AutomationControlled',
         '--no-first-run',
         '--no-default-browser-check',
       ],
