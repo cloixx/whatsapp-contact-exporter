@@ -1,0 +1,18 @@
+[
+  {
+    "id": { "_serialized": "380971234567@c.us" },
+    "name": "Іван Петренко",
+    "isGroup": false
+  },
+  {
+    "id": { "_serialized": "380687776655@c.us" },
+    "name": "Олексій (Діалог з чату)",
+    "pushname": "Alex",
+    "isGroup": false
+  },
+  {
+    "id": { "_serialized": "120363028371928374@g.us" },
+    "name": "Робочий чат проекту",
+    "isGroup": true
+  }
+]

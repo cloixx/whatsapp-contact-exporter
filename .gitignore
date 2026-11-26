@@ -1,0 +1,30 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# WhatsApp session and authentication (CRITICAL: Never commit auth secrets)
+.wwebjs_auth/
+.wwebjs_cache/
+*.session
+*.auth
+auth_info/
+
+# Exported sensitive data
+output/
+*.csv
+*.vcf
+*.json.bak
+
+# Operating System and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Nix result symlinks
+result
+result-*

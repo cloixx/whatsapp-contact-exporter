@@ -1,0 +1,134 @@
+[
+  {
+    "id": { "_serialized": "380971234567@c.us" },
+    "name": "Іван Петренко",
+    "pushname": "Ivan P",
+    "number": "380971234567",
+    "isMyContact": true,
+    "isAddressBookContact": true,
+    "isWAContact": true,
+    "about": "На зв'язку в робочий час"
+  },
+  {
+    "id": { "_serialized": "380509876543@c.us" },
+    "name": "Олена Ковальчук",
+    "pushname": "Olena",
+    "number": "380509876543",
+    "isMyContact": true,
+    "isAddressBookContact": false,
+    "isWAContact": true,
+    "about": "Дзвонити після 18:00"
+  },
+  {
+    "id": { "_serialized": "380679998877@c.us" },
+    "name": "Тарас Григорович Шевченко",
+    "pushname": "Тарас",
+    "number": "380679998877",
+    "isMyContact": true,
+    "isAddressBookContact": true,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "380631112233@c.us" },
+    "name": "Марія 🌸",
+    "pushname": "Mary",
+    "number": "380631112233",
+    "isMyContact": true,
+    "isAddressBookContact": false,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "380993334455@c.us" },
+    "name": "Сергій (СТО 🚗)",
+    "pushname": "Serhiy Master",
+    "number": "380993334455",
+    "isMyContact": true,
+    "isAddressBookContact": false,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "14155552671@c.us" },
+    "name": "John Doe",
+    "pushname": "JD",
+    "number": "14155552671",
+    "isMyContact": true,
+    "isAddressBookContact": true,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "4915123456789@c.us" },
+    "name": "Hans Müller",
+    "pushname": "Hans M",
+    "number": "4915123456789",
+    "isMyContact": true,
+    "isAddressBookContact": true,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "380931122334@c.us" },
+    "name": null,
+    "pushname": "Незнайомець Андрій",
+    "number": "380931122334",
+    "isMyContact": false,
+    "isAddressBookContact": false,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "380442223344@c.us" },
+    "name": "Київстар Підтримка",
+    "verifiedName": "Kyivstar Official",
+    "number": "380442223344",
+    "isMyContact": false,
+    "isAddressBookContact": false,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "120363028371928374@g.us" },
+    "name": "Робочий чат проекту",
+    "isGroup": true,
+    "isMyContact": false
+  },
+  {
+    "id": { "_serialized": "status@broadcast" },
+    "name": "Status Updates",
+    "isMyContact": false
+  },
+  {
+    "id": { "_serialized": "120363148192837465@newsletter" },
+    "name": "Tech News Channel",
+    "type": "newsletter",
+    "isMyContact": false
+  },
+  {
+    "id": { "_serialized": "0@c.us" },
+    "name": "Official WhatsApp",
+    "isMyContact": false
+  },
+  {
+    "id": { "_serialized": "102938475610293@lid" },
+    "name": "Користувач з LID (Розпізнаний)",
+    "pushname": "LidUser1",
+    "number": null,
+    "isMyContact": true,
+    "isAddressBookContact": false,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "999999999999999@lid" },
+    "name": "Користувач з LID (Без номера)",
+    "pushname": "SecretLidUser",
+    "number": null,
+    "isMyContact": true,
+    "isAddressBookContact": false,
+    "isWAContact": true
+  },
+  {
+    "id": { "_serialized": "380971234567@c.us" },
+    "name": "Іван Петренко (Дублікат)",
+    "pushname": "Ivan P",
+    "number": "380971234567",
+    "isMyContact": true,
+    "isAddressBookContact": false,
+    "isWAContact": true
+  }
+]
