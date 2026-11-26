@@ -13,6 +13,40 @@ Runs completely on your local computer. No cloud services, no root required, no 
 
 ---
 
+## 💡 Why This Project Exists
+
+Have you ever tried moving away from WhatsApp or syncing your phone book with Google Contacts, only to discover that hundreds of your contacts are trapped exclusively inside WhatsApp's cloud storage? We have been there! 😅
+
+This project was created to make life easier for everyone who faces this frustrating limitation. 
+
+> ⚠️ **Heads up on WhatsApp Web updates:**  
+> WhatsApp Web is constantly evolving, and Meta frequently updates internal web app structures. When things shift under the hood, this project will need corresponding updates. The author (@cloixx) will actively maintain this repository, fix issues, and update instructions as free time allows! Feel free to open an Issue or pull request if you notice changes! 🙂
+
+> 🛡️ **Friendly Disclaimer:**  
+> This open-source tool is provided free of charge for your convenience under the MIT License. You use it at your own discretion and responsibility. We encourage you to audit and inspect the code with your own AI assistants before running it — transparency is our core principle! ✨
+
+---
+
+## 🤖 Using with AI Assistants (Antigravity, Claude Code, Codex/Cursor)
+
+If you use autonomous AI coding assistants, you can delegate running, auditing, and adapting this tool to your agent in seconds!
+
+### 🔮 Google Antigravity (AGY)
+```bash
+agy "Clone https://github.com/cloixx/whatsapp-contact-exporter, review the code safety, run the test suite with npm test, and prepare run.sh for my environment."
+```
+
+### 🧠 Claude Code
+```bash
+claude "Inspect the https://github.com/cloixx/whatsapp-contact-exporter repository, verify the contact extraction pipeline, and help me execute the export safely."
+```
+
+### 💻 OpenAI Codex / ChatGPT / Cursor
+Clone the repository, open it in Cursor or VS Code, and prompt your assistant:
+> *"Audit this project to ensure it only operates locally in read-only mode, run the synthetic test suite (`npm test`), and help me run `./run.sh` (or `run.bat` on Windows) to export my WhatsApp contacts."*
+
+---
+
 ## 👥 Authorship & Project Origin
 
 This utility was created through a human-AI collaboration by **cloixx** and **Antigravity AI**. 

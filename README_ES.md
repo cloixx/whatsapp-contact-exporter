@@ -13,6 +13,40 @@ Se ejecuta completamente en tu computadora. Sin servidores externos, sin acceso 
 
 ---
 
+## 💡 ¿Por qué existe este proyecto?
+
+Si alguna vez has intentado transferir tus contactos de WhatsApp a Google Contacts o a un teléfono nuevo, seguro que conoces la frustración: cientos de contactos se quedan atrapados en la nube de WhatsApp y no se pueden exportar con métodos estándar. ¡Nosotros también lo vivimos! 😅
+
+Creamos esta herramienta para facilitarle la vida a cualquiera que necesite recuperar su agenda de forma rápida, gratuita y segura.
+
+> ⚠️ **Sobre las actualizaciones de WhatsApp Web:**  
+> WhatsApp Web evoluciona constantemente y Meta actualiza con frecuencia la estructura interna de la aplicación. Cuando esto ocurra, el proyecto necesitará las actualizaciones correspondientes. El autor (@cloixx) mantendrá este repositorio, solucionará errores y responderá a Issues según su tiempo libre 🙂.
+
+> 🛡️ **Aviso amistoso (Descargo de responsabilidad):**  
+> Esta herramienta se proporciona bajo licencia MIT «tal cual». El uso del programa es bajo tu propia responsabilidad. Te invitamos a revisar y auditar el código fuente con tus propios asistentes de IA antes de ejecutarlo — ¡la transparencia es fundamental! ✨
+
+---
+
+## 🤖 Uso con asistentes de IA (Antigravity, Claude Code, Codex / Cursor)
+
+Puedes delegar la revisión, configuración y ejecución de este proyecto a tu agente de IA preferido en cuestión de segundos:
+
+### 🔮 Google Antigravity (AGY)
+```bash
+agy "Clona https://github.com/cloixx/whatsapp-contact-exporter, verifica la seguridad del código, ejecuta las pruebas npm test y prepara run.sh para mi sistema."
+```
+
+### 🧠 Claude Code
+```bash
+claude "Inspecciona el repositorio https://github.com/cloixx/whatsapp-contact-exporter, confirma la seguridad del pipeline y ayúdame a exportar mis contactos."
+```
+
+### 💻 OpenAI Codex / ChatGPT / Cursor
+Clona el proyecto, ábrelo en Cursor o VS Code y envía este mensaje a tu asistente:
+> *«Verifica la seguridad de este proyecto, asegúrate de que funcione solo en modo local de lectura, ejecuta las pruebas sintéticas (`npm test`) y ayúdame a ejecutar `./run.sh` (o `run.bat` en Windows) para exportar mis contactos.»*
+
+---
+
 ## 👥 Autoría y origen del proyecto
 
 Este proyecto fue desarrollado en colaboración entre el usuario **cloixx** y el asistente **Antigravity AI**.
