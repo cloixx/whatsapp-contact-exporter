@@ -211,13 +211,67 @@ To run the full end-to-end export pipeline using synthetic test data:
 
 ---
 
-## 🔒 Session Cleanup & Security
+## 🔒 Security, Session Cleanup & Critical Unlinking Guide
 
-To revoke the session from your terminal and delete stored tokens:
-```bash
-./run.sh --clean
-```
-You can also unlink the device anytime from your phone via **WhatsApp -> Linked Devices -> Log out**.
+> ### 🔴 CRITICAL STEP: ALWAYS UNLINK FROM YOUR PHONE AFTER EXPORTING!
+> Scanning the QR code pairs your smartphone with a local browser session via WhatsApp Multi-Device. Even though this tool closes its browser when the export finishes, **the authorization token remains cryptographically valid on WhatsApp servers until explicitly revoked**.
+> 
+> **Failing to unlink leaves an open session attached to your account** and consumes one of your 4 allowed linked device slots.
+> 
+> **To ensure 100% security, perform the unlinking steps below immediately after your files are saved!**
+
+---
+
+### Step 1: Revoke Access on Your Smartphone (The Most Important Step)
+
+This permanently destroys the encryption session on Meta / WhatsApp servers:
+1. Open **WhatsApp** on your smartphone.
+2. Tap the **Three Dots (⋮)** in the top right corner (on Android) or go to **Settings** (on iPhone).
+3. Select **Linked Devices** (**Связанные устройства** / **Пов'язані пристрої**).
+4. Under the **Device Status** list, find the active browser session (it typically displays as `Google Chrome (Windows)`, `Google Chrome (Linux)`, or `Mac OS`).
+5. Tap on this session and tap **Log Out** (**Выйти**).
+6. Verify the device disappears from your list.
+
+*Once logged out on your phone, nobody — not even someone with physical access to your computer — can access your WhatsApp account using the old session keys.*
+
+---
+
+### Step 2: Delete Local Session Files on Your Computer
+
+While Step 1 deauthorizes the connection on the server, you should also wipe the local tokens and cache saved in `.wwebjs_auth/`:
+
+#### 🪟 On Windows
+- **Option A (One click):** Double-click the **`clean.bat`** file included in the project folder.
+- **Option B (Manual):** Open File Explorer, enable **Hidden items** (View -> Show -> Hidden items), locate the `.wwebjs_auth` folder in the project directory, and press `Shift + Delete`.
+
+#### 🍏 On macOS
+- In your Terminal inside the project folder, run:
+  ```bash
+  ./run.sh --clean
+  ```
+- *Or via Finder:* In the project folder, press `Cmd + Shift + .` (period) to reveal hidden folders, and drag `.wwebjs_auth` to the Trash.
+
+#### 🐧 On Linux / ❄️ NixOS
+- In your terminal:
+  ```bash
+  ./run.sh --clean
+  # or manually:
+  rm -rf .wwebjs_auth .wwebjs_cache
+  ```
+
+---
+
+### 🛡️ Understanding Local Storage & Privacy Guarantees
+
+1. **What is stored in `.wwebjs_auth`?**
+   - Temporary browser session cookies, IndexedDB records, and device encryption keys needed while WhatsApp Web is running. It contains sensitive authentication material and is therefore strictly ignored by `.gitignore`. **Never commit or share this folder.**
+2. **What is stored in `output/`?**
+   - Your extracted personal contacts, CSVs, and VCF files.
+   - Files are created with strict permissions (`chmod 600` on Linux/macOS, readable only by your user account).
+   - Once you have successfully imported `google_contacts_import.csv` into Google Contacts or saved your backup in a secure vault, you may safely delete or archive the `output/` folder.
+3. **No Telemetry, No Cloud, No Modification**:
+   - The utility operates strictly in read-only mode (`client.getContacts()`).
+   - It cannot send messages, delete chats, edit contacts, or access conversations outside your local machine.
 
 ---
 

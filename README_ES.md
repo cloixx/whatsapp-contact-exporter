@@ -202,13 +202,67 @@ Para ejecutar el pipeline completo con datos de prueba:
 
 ---
 
-## 🔒 Cerrar y revocar sesión
+## 🔒 Seguridad, limpieza de sesión y desvinculación obligatoria
 
-Para borrar las credenciales locales de la sesión:
-```bash
-./run.sh --clean
-```
-También puedes desvincular el dispositivo desde tu teléfono: **WhatsApp -> Dispositivos vinculados -> Cerrar sesión**.
+> ### 🔴 ATENCIÓN: ¡ES OBLIGATORIO DESVINCULAR EL DISPOSITIVO EN TU TELÉFONO!
+> Al escanear el código QR, tu teléfono vincula el navegador local a través de WhatsApp Multi-Device. Aunque el programa cierra el navegador al finalizar la exportación, **el token de autorización permanece activo en los servidores de Meta hasta que pulses explícitamente «Cerrar sesión»**.
+> 
+> **Si no desvinculas el dispositivo, la sesión quedará abierta en tu cuenta** y ocupará uno de los 4 espacios permitidos para dispositivos vinculados.
+> 
+> **¡Para garantizar una seguridad total, realiza los siguientes pasos inmediatamente después de guardar tus archivos!**
+
+---
+
+### Paso 1: Desvincular en tu teléfono móvil (El paso más importante)
+
+Esta acción destruye definitivamente las claves criptográficas de la sesión en los servidores de WhatsApp:
+1. Abre **WhatsApp** en tu teléfono móvil.
+2. Toca en el **Menú (tres puntos ⋮)** en la esquina superior derecha (en Android) o entra en **Ajustes** (en iPhone).
+3. Selecciona **Dispositivos vinculados** (**Linked Devices**).
+4. En la lista de dispositivos activos, busca la sesión del navegador (normalmente aparece como `Google Chrome (Windows)`, `Google Chrome (Linux)` o `Mac OS`).
+5. Toca sobre ella y pulsa **Cerrar sesión** (**Log Out**).
+6. Comprueba que el dispositivo desaparece de la lista.
+
+*Una vez cerrada la sesión desde el teléfono, nadie —ni siquiera alguien con acceso físico a tu ordenador— podrá volver a acceder a tu cuenta de WhatsApp con las claves antiguas.*
+
+---
+
+### Paso 2: Eliminar los archivos locales de sesión en tu ordenador
+
+Tras revocar el acceso en el servidor, se recomienda borrar los tokens locales y la caché de la carpeta `.wwebjs_auth/`:
+
+#### 🪟 En Windows
+- **Opción A (Un solo clic):** Haz doble clic en el archivo **`clean.bat`** incluido en la carpeta del proyecto.
+- **Opción B (Manual):** En el Explorador de archivos, activa la vista de elementos ocultos (*Vista -> Mostrar -> Elementos ocultos*), busca la carpeta `.wwebjs_auth` y bórrala (`Shift + Supr`).
+
+#### 🍏 En macOS
+- En la aplicación Terminal dentro de la carpeta del proyecto, ejecuta:
+  ```bash
+  ./run.sh --clean
+  ```
+- *O desde Finder:* En la carpeta del proyecto pulsa `Cmd + Shift + .` (punto) para mostrar las carpetas ocultas y arrastra `.wwebjs_auth` a la Papelera.
+
+#### 🐧 En Linux / ❄️ NixOS
+- En tu terminal ejecuta:
+  ```bash
+  ./run.sh --clean
+  # o manualmente:
+  rm -rf .wwebjs_auth .wwebjs_cache
+  ```
+
+---
+
+### 🛡️ Garantías de privacidad y almacenamiento local
+
+1. **¿Qué se guarda en `.wwebjs_auth`?**
+   - Cookies temporales del navegador, datos de IndexedDB y claves de cifrado necesarias mientras se ejecuta WhatsApp Web. Esta carpeta está estrictamente bloqueada en `.gitignore` y **nunca debe compartirse ni subirse a internet**.
+2. **¿Qué se guarda en `output/`?**
+   - Tus contactos personales exportados en formato CSV y VCF.
+   - En Linux/macOS los archivos se crean con permisos restringidos (`chmod 600`, lectura únicamente para tu usuario).
+   - Una vez importado `google_contacts_import.csv` en Google Contacts o guardada tu copia de seguridad, puedes borrar la carpeta `output/` con total seguridad.
+3. **Sin telemetría ni modificaciones**:
+   - La herramienta funciona estrictamente en modo lectura (`client.getContacts()`).
+   - No contiene código para enviar mensajes, eliminar conversaciones ni modificar contactos.
 
 ---
 
