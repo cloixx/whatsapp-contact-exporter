@@ -68,38 +68,99 @@ It was developed, tested, and validated on a live account with **5,477 total con
 
 ---
 
-## 🚀 Easy Step-by-Step Guide
+## 🚀 Detailed Installation & Setup Guide (By Operating System)
 
-### 🪟 Windows (No technical skills required)
-1. Install [Node.js (LTS)](https://nodejs.org/) using the default installer settings.
-2. Download this project (click green button **Code** -> **Download ZIP**) and unpack the folder.
-3. Double-click **`run.bat`**.
-4. Scan the QR code displayed in the terminal window using your WhatsApp mobile app.
-5. Once complete, your files will be ready in the **`output`** folder.
+### 🪟 Windows (Simple 3-Step Guide)
 
-### 🍏 macOS
-1. Open Terminal and install Node.js (via [nodejs.org](https://nodejs.org/) or `brew install node`).
-2. Run in the project directory:
-   ```bash
-   ./run.sh
-   ```
-3. Scan the terminal QR code with your phone.
+#### Step 1: Install Node.js & Chrome
+- **Google Chrome**: Ensure you have Google Chrome or Microsoft Edge installed (the tool uses your browser to open WhatsApp Web in the background).
+- **Node.js**: Download the **LTS installer** from [nodejs.org](https://nodejs.org/).
+  - Run the downloaded installer.
+  - Keep clicking **Next**, accept the license, and click **Install**. No special settings are needed!
+  - *(Optional)* To verify, open PowerShell and type `node -v`. It should show something like `v20.x.x` or `v22.x.x`.
 
-### 🐧 Linux (Ubuntu, Debian, Fedora, Arch)
-1. Ensure Node.js and Chromium/Chrome are installed:
-   ```bash
-   # Ubuntu / Debian:
-   sudo apt update && sudo apt install nodejs npm chromium-browser
-   ```
-2. In the project folder, run:
-   ```bash
-   chmod +x run.sh
-   ./run.sh
-   ```
+#### Step 2: Download the Project
+- On this GitHub page, click the green **Code** button at the top right, then click **Download ZIP**.
+- Once downloaded, right-click the `.zip` archive and select **Extract All...** to unpack it into a folder (for example, on your Desktop or in Downloads).
 
-### ❄️ NixOS
-Run directly inside the isolated Nix Flake environment:
+#### Step 3: Run the Program
+- Open the unpacked folder.
+- Double-click **`run.bat`**.
+  - *Tip:* If Windows SmartScreen shows a blue warning ("Windows protected your PC"), click **More info** and then **Run anyway**.
+  - The script will automatically install all needed libraries on the first run (this takes about 15-30 seconds).
+  - A QR code will appear directly inside the black console window!
+
+---
+
+### 🍏 macOS (Step-by-Step)
+
+#### Step 1: Install Node.js
+- Download and run the macOS installer (`.pkg`) from [nodejs.org](https://nodejs.org/).
+- *Or with Homebrew (for developers):*
+  ```bash
+  brew install node
+  ```
+- Make sure Google Chrome is in your `/Applications` folder.
+
+#### Step 2: Download & Extract
+- Click the green **Code** button -> **Download ZIP**, and double-click the archive in your Downloads folder to extract it.
+
+#### Step 3: Open Terminal & Run
+- Open the **Terminal** app (press `Cmd + Space`, type `Terminal`, and press `Enter`).
+- Navigate into the project directory (you can type `cd ` and drag-and-drop the extracted folder into Terminal):
+  ```bash
+  cd ~/Downloads/whatsapp-contact-exporter-main
+  ```
+- Make the script executable and launch:
+  ```bash
+  chmod +x run.sh
+  ./run.sh
+  ```
+- A QR code will appear in your Terminal!
+
+---
+
+### 🐧 Linux (Ubuntu, Linux Mint, Debian, Fedora, Arch)
+
+#### Step 1: Install Dependencies
+Open your terminal and install Node.js and Chromium/Chrome:
+
+- **Ubuntu / Linux Mint / Debian**:
+  ```bash
+  sudo apt update
+  sudo apt install -y nodejs npm chromium-browser git
+  ```
+- **Fedora / RHEL**:
+  ```bash
+  sudo dnf install -y nodejs npm chromium git
+  ```
+- **Arch Linux / Manjaro**:
+  ```bash
+  sudo pacman -S --needed nodejs npm chromium git
+  ```
+
+#### Step 2: Clone or Download the Repository
 ```bash
+git clone https://github.com/cloixx/whatsapp-contact-exporter.git
+cd whatsapp-contact-exporter
+```
+
+#### Step 3: Run the Exporter
+```bash
+chmod +x run.sh
+./run.sh
+```
+*The launcher checks your system, runs `npm install` automatically if needed, connects to Chromium, and prints the QR code in the terminal.*
+
+---
+
+### ❄️ NixOS (Zero-Configuration Isolated Flake)
+
+On NixOS, everything (Node.js 22, Chromium 158, Puppeteer configuration, and GitHub CLI) is fully isolated inside `flake.nix`. No system changes or manual package installations are required:
+
+```bash
+git clone https://github.com/cloixx/whatsapp-contact-exporter.git
+cd whatsapp-contact-exporter
 ./run.sh
 ```
 

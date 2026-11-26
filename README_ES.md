@@ -72,37 +72,99 @@ Probado y validado en una cuenta real con **5.477 contactos** en **WhatsApp vers
 
 ---
 
-## 🚀 Guía paso a paso
+## 🚀 Guía detallada de instalación y uso (por sistema operativo)
 
-### 🪟 Windows (Fácil para principiantes)
-1. Instala [Node.js (LTS)](https://nodejs.org/) con las opciones por defecto.
-2. Descarga este repositorio (botón verde **Code** -> **Download ZIP**) y descomprime la carpeta.
-3. Haz doble clic en el archivo **`run.bat`**.
-4. Escanea el código QR que aparecerá en pantalla con la app de WhatsApp de tu teléfono.
-5. Los archivos listos se generarán en la carpeta **`output`**.
+### 🪟 Windows (Instrucciones sencillas para principiantes)
 
-### 🍏 macOS
-1. Instala Node.js (desde [nodejs.org](https://nodejs.org/) o mediante `brew install node`).
-2. Abre la terminal en la carpeta del proyecto y ejecuta:
-   ```bash
-   ./run.sh
-   ```
-3. Escanea el código QR con tu teléfono.
+#### Paso 1: Instalar Node.js y el navegador
+- **Navegador**: Asegúrate de tener instalado **Google Chrome** o **Microsoft Edge** (la herramienta lo utiliza en segundo plano para abrir WhatsApp Web).
+- **Node.js**: Entra en [nodejs.org](https://nodejs.org/) y descarga la versión **LTS** (recomendada para la mayoría de los usuarios).
+  - Abre el instalador `.msi` descargado.
+  - Haz clic en **Next** (Siguiente) en todas las pantallas, acepta la licencia y haz clic en **Install**. ¡No necesitas cambiar nada!
+  - *(Comprobación)*: Puedes abrir PowerShell y escribir `node -v` para ver la versión instalada (por ejemplo, `v20.x` o `v22.x`).
 
-### 🐧 Linux (Ubuntu, Debian, Fedora, Arch)
-1. Instala Node.js y Chromium:
-   ```bash
-   sudo apt update && sudo apt install nodejs npm chromium-browser
-   ```
-2. Ejecuta:
-   ```bash
-   chmod +x run.sh
-   ./run.sh
-   ```
+#### Paso 2: Descargar el proyecto
+- En la parte superior derecha de esta página de GitHub, haz clic en el botón verde **Code** y luego en **Download ZIP**.
+- Abre el archivo descargado y selecciona **Extraer todo...** (guarda la carpeta en el Escritorio o en Descargas).
 
-### ❄️ NixOS
-Ejecuta directamente con Nix Flakes:
+#### Paso 3: Ejecutar con un doble clic
+- Entra en la carpeta descomprimida.
+- Haz doble clic sobre el archivo **`run.bat`**.
+  - *Consejo*: Si aparece una ventana azul de protección de Windows SmartScreen, haz clic en **Más información** (More info) y después en **Ejecutar de todas formas** (Run anyway).
+  - La primera vez, el programa descargará automáticamente las librerías necesarias (unos 15–30 segundos).
+  - ¡En la ventana negra aparecerá el código QR listo para escanear!
+
+---
+
+### 🍏 macOS (Paso a paso para Mac)
+
+#### Paso 1: Instalar Node.js
+- Descarga y ejecuta el instalador (`.pkg`) desde [nodejs.org](https://nodejs.org/).
+- *O usa Homebrew:*
+  ```bash
+  brew install node
+  ```
+- Comprueba que tienes Google Chrome en tu carpeta `/Applications`.
+
+#### Paso 2: Descargar y descomprimir
+- Haz clic en **Code** -> **Download ZIP** en GitHub y descomprime el archivo con un doble clic.
+
+#### Paso 3: Abrir la Terminal y ejecutar
+- Abre la app **Terminal** (pulsa `Cmd + Espacio`, escribe `Terminal` y presiona `Enter`).
+- Ve a la carpeta del proyecto (escribe `cd ` y arrastra la carpeta descomprimida desde Finder a la ventana de la Terminal):
+  ```bash
+  cd ~/Downloads/whatsapp-contact-exporter-main
+  ```
+- Otorga permisos de ejecución y lanza el script:
+  ```bash
+  chmod +x run.sh
+  ./run.sh
+  ```
+- ¡Verás el código QR en la pantalla de la Terminal!
+
+---
+
+### 🐧 Linux (Ubuntu, Linux Mint, Debian, Fedora, Arch)
+
+#### Paso 1: Instalar paquetes necesarios
+Abre tu terminal e instala Node.js y Chromium:
+
+- **Ubuntu / Linux Mint / Debian**:
+  ```bash
+  sudo apt update
+  sudo apt install -y nodejs npm chromium-browser git
+  ```
+- **Fedora / RHEL**:
+  ```bash
+  sudo dnf install -y nodejs npm chromium git
+  ```
+- **Arch Linux / Manjaro**:
+  ```bash
+  sudo pacman -S --needed nodejs npm chromium git
+  ```
+
+#### Paso 2: Clonar o descargar el repositorio
 ```bash
+git clone https://github.com/cloixx/whatsapp-contact-exporter.git
+cd whatsapp-contact-exporter
+```
+
+#### Paso 3: Ejecutar
+```bash
+chmod +x run.sh
+./run.sh
+```
+*El script detectará tu sistema, ejecutará `npm install` si es necesario, conectará con Chromium y mostrará el código QR.*
+
+---
+
+### ❄️ NixOS (Entorno aislado con Flakes)
+
+Para usuarios de NixOS, todo el entorno (Node.js 22, Chromium 158, configuración de Puppeteer y GitHub CLI) está predefinido en `flake.nix`. No requiere instalaciones globales:
+
+```bash
+git clone https://github.com/cloixx/whatsapp-contact-exporter.git
+cd whatsapp-contact-exporter
 ./run.sh
 ```
 
