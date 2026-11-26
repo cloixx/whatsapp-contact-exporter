@@ -94,8 +94,8 @@ export function resolveContactIdentity(rawContact) {
     displayName = pushname;
   } else if (shortName && !isPhoneNumberOrId(shortName)) {
     displayName = shortName;
-  } else if (rawContact.number && !isPhoneNumberOrId(rawContact.number)) {
-    displayName = rawContact.number;
+  } else if (rawContact.number) {
+    displayName = `WhatsApp ${cleanNameString(rawContact.number)}`;
   } else {
     displayName = isSaved ? 'Saved Contact' : 'WhatsApp Contact';
   }

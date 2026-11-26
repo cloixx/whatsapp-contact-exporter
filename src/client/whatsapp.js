@@ -62,6 +62,10 @@ export async function runWhatsAppClient(options = {}) {
       onProgress('\nWaiting for scan...');
     });
 
+    client.on('loading_screen', (percent, message) => {
+      onProgress(`[WhatsApp] Sync progress: ${percent}% - ${message}`);
+    });
+
     client.on('authenticated', () => {
       onProgress('[WhatsApp] ✓ Authentication successful!');
     });
@@ -80,20 +84,47 @@ export async function runWhatsAppClient(options = {}) {
       isFinished = true;
 
       try {
-        onProgress('[WhatsApp] ✓ Client is ready! Starting contact extraction...');
+        onProgress('[WhatsApp] ✓ Client is ready! Synchronizing contacts database...');
 
-        // 1. Fetch contacts via standard API
-        onProgress('[WhatsApp] Querying contacts database...');
-        const rawContacts = await client.getContacts();
-        onProgress(`[WhatsApp] Found ${rawContacts.length} raw contact entries.`);
+        // Wait for contact names to finish syncing from phone
+        let lastNamed = 0;
+        let stableTicks = 0;
+        for (let i = 0; i < 30; i++) {
+          try {
+            const status = await client.pupPage.evaluate(() => {
+              try {
+                const coll = window.require ? window.require('WAWebCollections')?.Contact : null;
+                const models = coll ? coll.getModelsArray() : [];
+                let named = 0;
+                for (const m of models) {
+                  if (m.name || m.__x_name) named++;
+                }
+                return { total: models.length, named };
+              } catch (e) {
+                return { total: 0, named: 0 };
+              }
+            });
 
-        // 2. Fetch chats to discover 1-to-1 conversation participants
-        onProgress('[WhatsApp] Querying chat history list...');
-        const rawChats = await client.getChats();
-        onProgress(`[WhatsApp] Found ${rawChats.length} chat threads.`);
+            if (status.named > 0) {
+              onProgress(`[WhatsApp] Syncing: ${status.named} named contacts loaded (total in memory: ${status.total})...`);
+              if (status.named === lastNamed) {
+                stableTicks++;
+                if (stableTicks >= 2) {
+                  onProgress(`[WhatsApp] ✓ Contact synchronization complete! ${status.named} named contacts ready.`);
+                  break;
+                }
+              } else {
+                stableTicks = 0;
+              }
+              lastNamed = status.named;
+            }
+          } catch (e) {}
 
-        // 3. Deep extraction via browser store
-        onProgress('[WhatsApp] Querying internal Store.Contact models and LID mappings...');
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+
+        // 1. Deep extraction via internal WAWebCollections / Store models (most reliable for names & LIDs)
+        onProgress('[WhatsApp] Querying internal contact models and LID mappings...');
         let storeData = { contacts: [], lidToPhoneMap: {} };
         try {
           if (client.pupPage) {
@@ -109,6 +140,26 @@ export async function runWhatsAppClient(options = {}) {
             lidToPhoneMap.set(lid, phone);
           }
         }
+
+        // 2. Fetch contacts via standard API
+        onProgress('[WhatsApp] Querying standard contacts database...');
+        let rawContacts = [];
+        try {
+          rawContacts = await client.getContacts();
+        } catch (err) {
+          onProgress(`[WhatsApp] Standard getContacts() warning: ${err.message}`);
+        }
+        onProgress(`[WhatsApp] Found ${rawContacts.length} standard contacts, ${storeData.contacts.length} deep model contacts.`);
+
+        // 3. Fetch chats to discover 1-to-1 conversation participants
+        onProgress('[WhatsApp] Querying chat history list...');
+        let rawChats = [];
+        try {
+          rawChats = await client.getChats();
+        } catch (err) {
+          onProgress(`[WhatsApp] Chat list warning: ${err.message}`);
+        }
+        onProgress(`[WhatsApp] Found ${rawChats.length} chat threads.`);
 
         onProgress(`[WhatsApp] Extraction complete. Closing browser session...`);
         await client.destroy();

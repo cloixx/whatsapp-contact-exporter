@@ -1,6 +1,6 @@
 /**
  * Browser-side extraction helpers injected via Puppeteer page.evaluate().
- * This allows direct, robust access to WhatsApp Web's internal Store (Store.Contact, Store.LidUtils).
+ * Direct, robust access to WhatsApp Web's internal collections (WAWebCollections.Contact, Store.Contact, Store.LidUtils).
  */
 
 export const BROWSER_STORE_EXTRACTOR_SCRIPT = `
@@ -11,64 +11,78 @@ export const BROWSER_STORE_EXTRACTOR_SCRIPT = `
   };
 
   try {
-    const store = window.Store;
-    if (!store) {
+    let models = [];
+    try {
+      const contactCollection = window.require ? window.require('WAWebCollections')?.Contact : null;
+      if (contactCollection && typeof contactCollection.getModelsArray === 'function') {
+        models = contactCollection.getModelsArray();
+      }
+    } catch (e) {}
+
+    if ((!models || models.length === 0) && window.Store?.Contact?.models) {
+      models = window.Store.Contact.models;
+    }
+
+    if (!models || models.length === 0) {
       return result;
     }
 
-    // 1. Extract LID to Phone mappings if LidUtils is present
-    if (store.LidUtils) {
+    // Pass 1: Build LID to Phone Number resolution map
+    for (const m of models) {
       try {
-        // Some WhatsApp versions store cache in LidUtils or Contact.models
-        if (typeof store.LidUtils.getPhoneNumber === 'function') {
-          // Can be called per contact
+        const id = m.id ? (m.id._serialized || String(m.id)) : '';
+        const lid = m.lid ? (m.lid._serialized || String(m.lid)) : (id.endsWith('@lid') ? id : '');
+        const phoneNumber = m.phoneNumber
+          ? (m.phoneNumber._serialized || String(m.phoneNumber))
+          : (m.number || m.__x_phoneNumber || (id.endsWith('@c.us') ? id : ''));
+
+        const cleanPhone = String(phoneNumber).replace(/@(c\.us|s\.whatsapp\.net)$/, '');
+        if (lid && cleanPhone && !lid.endsWith('@c.us') && !cleanPhone.includes('@lid')) {
+          result.lidToPhoneMap[lid] = cleanPhone;
         }
-      } catch (e) {
-        // Ignore internal LID helper errors
-      }
+      } catch (e) {}
     }
 
-    // 2. Extract contacts from Store.Contact
-    if (store.Contact && store.Contact.models) {
-      for (const model of store.Contact.models) {
-        try {
-          const id = model.id ? (model.id._serialized || String(model.id)) : '';
-          if (!id) continue;
+    // Pass 2: Extract contact details
+    for (const m of models) {
+      try {
+        const id = m.id ? (m.id._serialized || String(m.id)) : '';
+        if (!id) continue;
 
-          // Skip groups, status, broadcasts, newsletters
-          if (id.endsWith('@g.us') || id.endsWith('@broadcast') || id.endsWith('@newsletter') || id === 'status@broadcast') {
-            continue;
-          }
-
-          let phoneNumber = model.phoneNumber || model.number || '';
-          let lid = model.lid ? (model.lid._serialized || String(model.lid)) : '';
-
-          if (lid && phoneNumber) {
-            result.lidToPhoneMap[lid] = String(phoneNumber);
-          }
-
-          result.contacts.push({
-            id: id,
-            name: model.name || null,
-            pushname: model.pushname || null,
-            verifiedName: model.verifiedName || null,
-            shortName: model.shortName || null,
-            number: phoneNumber || null,
-            isMyContact: Boolean(model.isMyContact),
-            isAddressBookContact: Boolean(model.isAddressBookContact),
-            isWAContact: Boolean(model.isWAContact),
-            about: model.about || null,
-            isGroup: Boolean(model.isGroup),
-            isUser: Boolean(model.isUser),
-          });
-        } catch (itemErr) {
-          // Skip individual corrupted item
+        // Skip non-contacts
+        if (id.endsWith('@g.us') || id.endsWith('@broadcast') || id.endsWith('@newsletter') || id === 'status@broadcast') {
+          continue;
         }
-      }
+
+        const name = m.name || m.__x_name || null;
+        const pushname = m.pushname || m.__x_pushname || null;
+        const verifiedName = m.verifiedName || m.__x_verifiedName || null;
+        const shortName = m.shortName || m.__x_shortName || null;
+        const phoneNumber = m.phoneNumber
+          ? (m.phoneNumber._serialized || String(m.phoneNumber))
+          : (m.number || m.__x_phoneNumber || null);
+
+        const cleanPhone = phoneNumber ? String(phoneNumber).replace(/@(c\.us|s\.whatsapp\.net)$/, '') : null;
+        const isMyContact = Boolean(m.isMyContact || m.__x_isMyContact || m.syncToAddressbook || m.__x_syncToAddressbook);
+        const isAddressBookContact = Boolean(m.isAddressBookContact || m.__x_isAddressBookContact || m.syncToAddressbook || m.__x_syncToAddressbook);
+
+        result.contacts.push({
+          id,
+          name,
+          pushname,
+          verifiedName,
+          shortName,
+          number: cleanPhone,
+          isMyContact,
+          isAddressBookContact,
+          isWAContact: Boolean(m.isWAContact || m.__x_isWAContact !== false),
+          about: m.about || m.__x_about || null,
+          isGroup: Boolean(m.isGroup || m.__x_isGroup),
+          isUser: Boolean(m.isUser || m.__x_isUser),
+        });
+      } catch (itemErr) {}
     }
-  } catch (err) {
-    // If Store access failed, return whatever was collected
-  }
+  } catch (err) {}
 
   return result;
 })()

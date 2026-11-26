@@ -1,3 +1,5 @@
+import { isPhoneNumberOrId } from '../normalizer/name.js';
+
 /**
  * Deduplicate contacts by normalized E.164 phone number (or ID for unresolved contacts).
  * Intelligently merges metadata between contact list and chat history entries.
@@ -33,13 +35,26 @@ export function deduplicateContacts(records) {
           existing.status = 'SAVED';
         }
 
-        // Prefer better custom name
-        if (record.customName && (!existing.customName || existing.customName.length < record.customName.length)) {
+        // Prefer real custom name over placeholder / phone number
+        const existingHasRealName = Boolean(existing.customName && !isPhoneNumberOrId(existing.customName));
+        const recordHasRealName = Boolean(record.customName && !isPhoneNumberOrId(record.customName));
+
+        if (!existingHasRealName && recordHasRealName) {
           existing.customName = record.customName;
           existing.displayName = record.displayName;
           existing.givenName = record.givenName;
           existing.familyName = record.familyName;
           existing.additionalName = record.additionalName;
+        } else if (existingHasRealName && recordHasRealName) {
+          const existingParts = (existing.familyName ? 1 : 0) + (existing.givenName ? 1 : 0);
+          const recordParts = (record.familyName ? 1 : 0) + (record.givenName ? 1 : 0);
+          if (recordParts > existingParts || (recordParts === existingParts && record.customName.length > existing.customName.length)) {
+            existing.customName = record.customName;
+            existing.displayName = record.displayName;
+            existing.givenName = record.givenName;
+            existing.familyName = record.familyName;
+            existing.additionalName = record.additionalName;
+          }
         }
 
         if (record.pushname && !existing.pushname) existing.pushname = record.pushname;
